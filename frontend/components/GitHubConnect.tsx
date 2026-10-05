@@ -2,18 +2,15 @@
 import { useState, useEffect } from 'react';
 import { createAuthClient } from "better-auth/react";
 
-// 1. बेटर ऑथ का क्लाइंट इन्स्टेंस बनाएं
 const authClient = createAuthClient({
-  baseURL: "http://localhost:3000"
+   baseURL: typeof window !== 'undefined' ? window.location.origin : "http://localhost:3000",
+  basePath: "/api/auth"
 });
 
 export function GitHubConnect({ telegramId }: { telegramId: number }) {
   const [loading, setLoading] = useState(false);
-  
-  // 🚀 फिक्स: हुक को सीधे कंपोनेंट की बॉडी में सबसे ऊपर कॉल किया (नियमों के अनुसार)
   const { data: session, isPending } = authClient.useSession();
 
-  // 2. जब सेशन डेटा लोड हो जाए, तो उसे सीधे NestJS बैकएंड पर सिंक करें
   useEffect(() => {
     if (session?.user && telegramId) {
       fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/v1/users/sync-github`, {
@@ -33,7 +30,7 @@ export function GitHubConnect({ telegramId }: { telegramId: number }) {
     try {
       await authClient.signIn.social({
         provider: "github",
-        callbackURL: "/dashboard" // लॉगिन पूरा होने पर डैशबोर्ड पर वापस आएं
+        callbackURL: "/dashboard"
       });
     } catch (err) {
       console.error("Authentication handshake crashed:", err);
@@ -42,12 +39,10 @@ export function GitHubConnect({ telegramId }: { telegramId: number }) {
     }
   };
 
-  // अगर अभी सेशन लोड हो रहा है तो लोडिंग स्टेट दिखाएं
   if (isPending) {
     return <div className="text-xs text-neutral-400">Checking session status...</div>;
   }
 
-  // अगर यूजर पहले से लॉग इन है
   if (session?.user) {
     return (
       <div className="text-xs text-emerald-400 bg-emerald-500/10 p-2.5 rounded-lg border border-emerald-500/20">
