@@ -10,7 +10,7 @@ export class PaymentController {
     const { telegramId, planType } = body;
     
     // Configure pricing configurations based on your app's pricing plan
-    const amount = planType === 'pro_monthly' ? 50 : 250; // Quantities designated in Stars
+    const amount = planType === 'pro_monthly' ? 50 : 250;
 
     try {
       // Hit Telegram's native createInvoice Link mechanism
