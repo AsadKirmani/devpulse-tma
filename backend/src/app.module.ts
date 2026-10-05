@@ -21,7 +21,7 @@ import { TelegramBotService } from './users/bot.service';
       port: parseInt(process.env.DATABASE_PORT || '5432', 10),
       username: process.env.DATABASE_USER || 'devpulse_user',
       password: process.env.DATABASE_PASSWORD || 'devpulse_secure_password',
-      database: process.env.DATABASE_NAME || 'devpulse_db',
+      database: !process.env.DATABASE_URL ? (process.env.DATABASE_NAME || 'devpulse_db') : undefined,
       entities: [User, WebhookEndpoint, PayloadLog],
       synchronize: true, // Turn off in production; use migrations instead
     }),
