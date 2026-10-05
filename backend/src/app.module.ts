@@ -16,15 +16,18 @@ import { TelegramBotService } from './users/bot.service';
   imports: [
     ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DATABASE_HOST || 'localhost',
-      port: parseInt(process.env.DATABASE_PORT || '5432', 10),
-      username: process.env.DATABASE_USER || 'devpulse_user',
-      password: process.env.DATABASE_PASSWORD || 'devpulse_secure_password',
-      database: !process.env.DATABASE_URL ? (process.env.DATABASE_NAME || 'devpulse_db') : undefined,
-      entities: [User, WebhookEndpoint, PayloadLog],
-      synchronize: true, // Turn off in production; use migrations instead
-    }),
+  type: 'postgres',
+  url: process.env.DATABASE_URL || undefined,
+  host: process.env.DATABASE_URL ? undefined : (process.env.DATABASE_HOST || 'localhost'),
+  port: process.env.DATABASE_URL ? undefined : parseInt(process.env.DATABASE_PORT || '5432', 10),
+  username: process.env.DATABASE_URL ? undefined : (process.env.DATABASE_USER || 'devpulse_user'),
+  password: process.env.DATABASE_URL ? undefined : (process.env.DATABASE_PASSWORD || 'devpulse_secure_password'),
+  database: process.env.DATABASE_URL ? undefined : (process.env.DATABASE_NAME || 'devpulse_db'),
+  entities: [User, WebhookEndpoint, PayloadLog],
+  synchronize: true,
+  ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false,
+}),
+
     TypeOrmModule.forFeature([User, WebhookEndpoint, PayloadLog]),
   ],
   controllers: [WebhookController, UsersController],
