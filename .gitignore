@@ -1,0 +1,17 @@
+# Dependency Directories
+node_modules/
+dist/
+.next/
+out/
+better-auth.db
+better-auth.db-journal
+
+# Environment Configuration Files (Secrets)
+.env
+.env.local
+.env.production
+.env.development
+
+# Operating System Logs
+.DS_Store
+Thumbs.db

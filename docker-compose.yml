@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: devpulse-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: devpulse_user
+      POSTGRES_PASSWORD: devpulse_secure_password
+      POSTGRES_DB: devpulse_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U devpulse_user -d devpulse_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: devpulse-pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@devpulse.app
+      PGADMIN_DEFAULT_PASSWORD: admin_secret_pass
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
