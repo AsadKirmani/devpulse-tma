@@ -3,8 +3,7 @@ import { useState, useEffect } from 'react';
 import { createAuthClient } from "better-auth/react";
 
 const authClient = createAuthClient({
-   baseURL: typeof window !== 'undefined' ? window.location.origin : "http://localhost:3000",
-  basePath: "/api/auth"
+  basePath: "/api/auth",
 });
 
 export function GitHubConnect({ telegramId }: { telegramId: number }) {
